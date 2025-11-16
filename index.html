@@ -130,6 +130,57 @@
             background: #15803d;
             color: #86efac;
         }
+
+        /* === APP CONTAINER === */
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .app-header h2 {
+            color: #f472b6;
+            font-size: 1.2rem;
+        }
+
+        .app-content {
+            margin-top: 60px;
+            width: 100%;
+            height: calc(100vh - 60px);
+            overflow: auto;
+            padding: 20px;
+        }
+
+        canvas {
+            border: 1px solid #334155;
+            background: #0f172a;
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -149,11 +200,44 @@
 
     <!-- MAIN APP -->
     <div id="main-app" class="app-container hidden">
-        <!-- App will be displayed here -->
-        <h1>Sistema de Reservas DelaOstia</h1>
+        <header class="app-header">
+            <h2>🍽️ DELAOSTIA RESERVAS</h2>
+            <button id="logout-btn" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Salir</button>
+        </header>
+        <div class="app-content">
+            <div class="map-container">
+                <canvas id="floor-map"></canvas>
+            </div>
+        </div>
     </div>
 
     <script>
+        // CONFIG DELAOSTIA
+        const restaurantConfig = {
+            nombre: 'DELAOSTIA',
+            horarioApertura: '20:30',
+            horarioCierre: '23:00',
+            diasAbiertos: ['jueves', 'viernes', 'sabado', 'domingo'],
+            duracionReserva: (comensales) => comensales <= 5 ? 75 : 90
+        };
+
+        // MESAS - PLANO REAL
+        const mesas = [
+            // ZONA BARRA
+            { id: 'Barra1', nombre: 'Barra 1', zona: 'Barra', x: 120, y: 80, w: 100, h: 60, capacity: 3, tipo: 'barra' },
+            { id: 'Barra2', nombre: 'Barra 2', zona: 'Barra', x: 240, y: 80, w: 100, h: 60, capacity: 3, tipo: 'barra' },
+            { id: 'Barra4', nombre: 'Barra 4', zona: 'Barra', x: 360, y: 80, w: 120, h: 60, capacity: 4, tipo: 'barra' },
+            
+            // ZONA PRINCIPAL
+            { id: 'MesaAlta', nombre: 'Mesa Alta', zona: 'Principal', x: 1050, y: 50, w: 120, h: 80, capacity: 4, tipo: 'mesa' },
+            { id: 'Mesa1', nombre: 'Mesa 1', zona: 'Principal', x: 1050, y: 180, w: 100, h: 80, capacity: 3, tipo: 'mesa' },
+            { id: 'LaMesita', nombre: 'La mesita', zona: 'Baños', x: 200, y: 350, w: 100, h: 100, capacity: 6, tipo: 'mesa' },
+            { id: 'Mesa5', nombre: 'Mesa 5', zona: 'Principal', x: 500, y: 350, w: 110, h: 90, capacity: 4, tipo: 'mesa' },
+            { id: 'Mesa3', nombre: 'Mesa 3', zona: 'Principal', x: 700, y: 500, w: 120, h: 80, capacity: 5, tipo: 'mesa', acoplablesCon: ['MesaVentana'] },
+            { id: 'MesaVentana', nombre: 'Mesa Ventana', zona: 'Principal', x: 850, y: 500, w: 120, h: 80, capacity: 5, tipo: 'mesa' },
+            { id: 'Mesa2', nombre: 'Mesa 2', zona: 'Principal', x: 600, y: 200, w: 100, h: 80, capacity: 3, tipo: 'mesa' }
+        ];
+
         // LOGIN HANDLER
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -161,7 +245,6 @@
             const errorDiv = document.getElementById('login-error');
             const successDiv = document.getElementById('login-success');
             
-            // Clear previous messages
             errorDiv.classList.add('hidden');
             successDiv.classList.add('hidden');
             
@@ -170,12 +253,51 @@
                 setTimeout(() => {
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('main-app').classList.remove('hidden');
+                    initMap();
                 }, 1500);
             } else {
                 errorDiv.textContent = '❌ Respuesta incorrecta';
                 errorDiv.classList.remove('hidden');
             }
         });
+
+        // LOGOUT
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('login-answer').value = '';
+            document.getElementById('login-form').reset();
+        });
+
+        // DRAW FLOOR MAP
+        function initMap() {
+            const canvas = document.getElementById('floor-map');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 1200;
+            canvas.height = 700;
+            
+            // Background
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw mesas
+            mesas.forEach(mesa => {
+                ctx.fillStyle = mesa.tipo === 'barra' ? '#475569' : '#334155';
+                ctx.fillRect(mesa.x, mesa.y, mesa.w, mesa.h);
+                
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(mesa.x, mesa.y, mesa.w, mesa.h);
+                
+                // Nombre
+                ctx.fillStyle = '#e2e8f0';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(mesa.nombre, mesa.x + mesa.w/2, mesa.y + mesa.h/2 - 8);
+                ctx.fillText(mesa.capacity + ' pax', mesa.x + mesa.w/2, mesa.y + mesa.h/2 + 10);
+            });
+        }
     </script>
 </body>
 </html>
