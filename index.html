@@ -12,39 +12,19 @@
         }
 
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #0f172a;
             color: #e2e8f0;
+            width: 100%;
+            height: 100%;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
-        /* === SCROLLBAR === */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-
-        /* === LOGIN SCREEN === */
+        /* LOGIN SCREEN */
         .login-container {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             width: 100vw;
             height: 100vh;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
@@ -55,8 +35,7 @@
         }
 
         .login-card {
-            width: 100%;
-            max-width: 450px;
+            width: 100%; max-width: 450px;
             padding: 3rem;
             background: #1e293b;
             border-radius: 16px;
@@ -73,118 +52,63 @@
         }
 
         .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            display: flex; flex-direction: column; gap: 1.5rem;
         }
 
         .login-question {
-            font-size: 1rem;
-            color: #cbd5e1;
-            text-align: center;
+            font-size: 1rem; color: #cbd5e1; text-align: center;
         }
 
         .login-form input {
-            padding: 0.75rem;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            background: #0f172a;
-            color: #e2e8f0;
-            font-size: 1rem;
-            text-align: center;
+            padding: 0.75rem; border: 1px solid #475569; border-radius: 8px;
+            background: #0f172a; color: #e2e8f0; font-size: 1rem; text-align: center;
         }
 
-        .login-form input::placeholder {
-            color: #64748b;
-        }
+        .login-form input::placeholder { color: #64748b; }
 
         .btn-primary {
-            padding: 0.75rem 1.5rem;
-            background: #f472b6;
-            color: #0f172a;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s;
+            padding: 0.75rem 1.5rem; background: #f472b6; color: #0f172a;
+            border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+            font-size: 1rem; transition: background 0.3s;
         }
 
-        .btn-primary:hover {
-            background: #ec4899;
-        }
+        .btn-primary:hover { background: #ec4899; }
 
         .alert {
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 500;
+            padding: 1rem; border-radius: 8px; text-align: center; font-weight: 500;
         }
 
-        .alert-error {
-            background: #7f1d1d;
-            color: #fca5a5;
-        }
+        .alert-error { background: #7f1d1d; color: #fca5a5; }
+        .alert-success { background: #15803d; color: #86efac; }
 
-        .alert-success {
-            background: #15803d;
-            color: #86efac;
-        }
-
-        /* === APP CONTAINER === */
+        /* APP */
         .app-container {
-            display: flex;
             width: 100vw;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
         .app-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 100;
+            height: 60px; background: #1e293b; border-bottom: 1px solid #334155;
+            padding: 0 20px; display: flex; align-items: center; justify-content: space-between;
         }
 
-        .app-header h2 {
-            color: #f472b6;
-            font-size: 1.2rem;
-        }
+        .app-header h2 { color: #f472b6; font-size: 1.2rem; }
 
         .app-content {
-            margin-top: 60px;
-            width: 100%;
-            height: calc(100vh - 60px);
-            overflow: auto;
-            padding: 20px;
+            flex: 1; overflow: auto; padding: 20px;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        canvas {
-            border: 1px solid #334155;
-            background: #0f172a;
-            border-radius: 8px;
-            cursor: crosshair;
-        }
-
-        .map-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        #floor-map {
+            border: 1px solid #334155; background: #0f172a; border-radius: 8px; max-width: 100%; height: auto;
         }
     </style>
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN -->
     <div id="login-screen" class="login-container">
         <div class="login-card">
             <h1 class="logo">🍽️ RESERVAS DELAOSTIA</h1>
@@ -198,47 +122,40 @@
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- APP -->
     <div id="main-app" class="app-container hidden">
         <header class="app-header">
             <h2>🍽️ DELAOSTIA RESERVAS</h2>
             <button id="logout-btn" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Salir</button>
         </header>
         <div class="app-content">
-            <div class="map-container">
-                <canvas id="floor-map"></canvas>
-            </div>
+            <canvas id="floor-map"></canvas>
         </div>
     </div>
 
     <script>
-        // CONFIG DELAOSTIA
-        const restaurantConfig = {
+        // CONFIG
+        const config = {
             nombre: 'DELAOSTIA',
             horarioApertura: '20:30',
-            horarioCierre: '23:00',
-            diasAbiertos: ['jueves', 'viernes', 'sabado', 'domingo'],
-            duracionReserva: (comensales) => comensales <= 5 ? 75 : 90
+            horarioCierre: '23:00'
         };
 
-        // MESAS - PLANO REAL
+        // MESAS
         const mesas = [
-            // ZONA BARRA
             { id: 'Barra1', nombre: 'Barra 1', zona: 'Barra', x: 120, y: 80, w: 100, h: 60, capacity: 3, tipo: 'barra' },
             { id: 'Barra2', nombre: 'Barra 2', zona: 'Barra', x: 240, y: 80, w: 100, h: 60, capacity: 3, tipo: 'barra' },
             { id: 'Barra4', nombre: 'Barra 4', zona: 'Barra', x: 360, y: 80, w: 120, h: 60, capacity: 4, tipo: 'barra' },
-            
-            // ZONA PRINCIPAL
             { id: 'MesaAlta', nombre: 'Mesa Alta', zona: 'Principal', x: 1050, y: 50, w: 120, h: 80, capacity: 4, tipo: 'mesa' },
             { id: 'Mesa1', nombre: 'Mesa 1', zona: 'Principal', x: 1050, y: 180, w: 100, h: 80, capacity: 3, tipo: 'mesa' },
             { id: 'LaMesita', nombre: 'La mesita', zona: 'Baños', x: 200, y: 350, w: 100, h: 100, capacity: 6, tipo: 'mesa' },
             { id: 'Mesa5', nombre: 'Mesa 5', zona: 'Principal', x: 500, y: 350, w: 110, h: 90, capacity: 4, tipo: 'mesa' },
-            { id: 'Mesa3', nombre: 'Mesa 3', zona: 'Principal', x: 700, y: 500, w: 120, h: 80, capacity: 5, tipo: 'mesa', acoplablesCon: ['MesaVentana'] },
+            { id: 'Mesa3', nombre: 'Mesa 3', zona: 'Principal', x: 700, y: 500, w: 120, h: 80, capacity: 5, tipo: 'mesa' },
             { id: 'MesaVentana', nombre: 'Mesa Ventana', zona: 'Principal', x: 850, y: 500, w: 120, h: 80, capacity: 5, tipo: 'mesa' },
             { id: 'Mesa2', nombre: 'Mesa 2', zona: 'Principal', x: 600, y: 200, w: 100, h: 80, capacity: 3, tipo: 'mesa' }
         ];
 
-        // LOGIN HANDLER
+        // LOGIN
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const answer = document.getElementById('login-answer').value.toLowerCase().trim();
@@ -253,7 +170,7 @@
                 setTimeout(() => {
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('main-app').classList.remove('hidden');
-                    initMap();
+                    setTimeout(initMap, 100);
                 }, 1500);
             } else {
                 errorDiv.textContent = '❌ Respuesta incorrecta';
@@ -269,17 +186,34 @@
             document.getElementById('login-form').reset();
         });
 
-        // DRAW FLOOR MAP
+        // DRAW MAP
         function initMap() {
             const canvas = document.getElementById('floor-map');
             const ctx = canvas.getContext('2d');
             
+            // Tamaño del canvas
             canvas.width = 1200;
             canvas.height = 700;
             
             // Background
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid (opcional)
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
             
             // Draw mesas
             mesas.forEach(mesa => {
@@ -290,11 +224,13 @@
                 ctx.lineWidth = 2;
                 ctx.strokeRect(mesa.x, mesa.y, mesa.w, mesa.h);
                 
-                // Nombre
+                // Label
                 ctx.fillStyle = '#e2e8f0';
-                ctx.font = '12px Arial';
+                ctx.font = 'bold 12px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(mesa.nombre, mesa.x + mesa.w/2, mesa.y + mesa.h/2 - 8);
+                ctx.textBaseline = 'middle';
+                ctx.fillText(mesa.nombre, mesa.x + mesa.w/2, mesa.y + mesa.h/2 - 10);
+                ctx.font = '11px Arial';
                 ctx.fillText(mesa.capacity + ' pax', mesa.x + mesa.w/2, mesa.y + mesa.h/2 + 10);
             });
         }
